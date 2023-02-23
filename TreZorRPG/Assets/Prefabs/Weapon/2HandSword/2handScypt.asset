@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb957db3f7fd98b45bfea56653ebd90b, type: 3}
+  m_Name: 2handScypt
+  m_EditorClassIdentifier: 
+  weaponRange: 2
+  weaponDamage: 5
+  weaponSpeed: 3.6
+  isRightHanded: 1
+  projectile: {fileID: 0}
+  My_WeaponOveride: {fileID: 22100000, guid: 6ce2717fc44c36f42a0092f4eded6695, type: 2}
+  EquipPrefab: {fileID: 1793215146702863732, guid: 658018d509d7be542bdbbb316ddeed71, type: 3}
