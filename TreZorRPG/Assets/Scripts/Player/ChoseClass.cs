@@ -5,6 +5,7 @@ using RPG.Player;
 
 public class ChoseClass : MonoBehaviour
 {
+    [SerializeField] private GameObject[] classModels;
     private bool isClassMenuOpen = false;
     [SerializeField] GameObject classMenu;
     private PlayerController playerControl;
@@ -41,6 +42,22 @@ public class ChoseClass : MonoBehaviour
     }
     public void ClickOnClassButton(int id_class) // When the player clicks on a class button
     {
-        Debug.Log("Chose class: " + id_class);
+        if(id_class > classModels.Length)
+        {
+            Debug.Log("The class id is higher than the number of classes");
+            return;
+        }
+        for (int i = 0; i < classModels.Length; i++)
+        {
+            if(i == id_class)
+            {
+                classModels[i].SetActive(true);
+            }
+            else
+            {
+                classModels[i].SetActive(false);
+            }
+        }
+        CloseClassMenu();
     }
 }
