@@ -6,5 +6,5 @@ using UnityEngine;
 
 public class Controls
 {
-    public ControlBindings Forwards, Backwards, RotateLeft, RotateRight, walkRun, strafeleft, straferight, Jump, AutoRun, ActionBar1;
+    public ControlBindings Forwards, Backwards, RotateLeft, RotateRight, walkRun, strafeleft, straferight, Jump, AutoRun, ActionBar1, ChoseClass;
 }
