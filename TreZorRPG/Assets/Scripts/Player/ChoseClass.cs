@@ -1,63 +1,65 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RPG.Combat;
 using RPG.Player;
 
-public class ChoseClass : MonoBehaviour
+namespace RPG.Player
 {
-    [SerializeField] private GameObject[] classModels;
-    private bool isClassMenuOpen = false;
-    [SerializeField] GameObject classMenu;
-    private PlayerController playerControl;
-    
-    void Start()
+    public class ChoseClass : MonoBehaviour
     {
-        playerControl = GetComponent<PlayerController>();
+        public int id_actual_class; 
+        private bool isClassMenuOpen = false;
+        [SerializeField] GameObject classMenu;
+        private PlayerController playerControl;
+        private EquipmentChange equipmentChange;
+        
+        void Start()
+        {
+            playerControl = GetComponent<PlayerController>();
+            equipmentChange = GetComponent<EquipmentChange>();
+            
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if(playerControl.controls.ChoseClass.GetControlBindingDown()) // If the player presses the button to open the class menu
+            {
+                if(isClassMenuOpen)
+                {
+                    CloseClassMenu();
+                }
+                else
+                {
+                    OpenClassMenu();
+                }  
+            }
+        }
+        void OpenClassMenu() // Open the class menu
+        {
+            isClassMenuOpen = true;
+            classMenu.SetActive(true);
+        }
+        void CloseClassMenu() // Close the class menu
+        {
+            isClassMenuOpen = false;
+            classMenu.SetActive(false);
+        }
+        public void ClickOnClassButton(int id_class) // When the player clicks on a class button
+        {
+            if(id_class != id_actual_class)
+            {
+                id_actual_class = id_class;
+                equipmentChange.EquipHand();
+            }
+            Debug.Log("Class id: " + id_actual_class);
+            CloseClassMenu();
+        }
+        public int GetIdActualClass()
+        {
+            return id_actual_class;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(playerControl.controls.ChoseClass.GetControlBindingDown()) // If the player presses the button to open the class menu
-        {
-            if(isClassMenuOpen)
-            {
-                CloseClassMenu();
-            }
-            else
-            {
-                OpenClassMenu();
-            }  
-        }
-    }
-    void OpenClassMenu() // Open the class menu
-    {
-        isClassMenuOpen = true;
-        classMenu.SetActive(true);
-    }
-    void CloseClassMenu() // Close the class menu
-    {
-        isClassMenuOpen = false;
-        classMenu.SetActive(false);
-    }
-    public void ClickOnClassButton(int id_class) // When the player clicks on a class button
-    {
-        if(id_class > classModels.Length)
-        {
-            Debug.Log("The class id is higher than the number of classes");
-            return;
-        }
-        for (int i = 0; i < classModels.Length; i++)
-        {
-            if(i == id_class)
-            {
-                classModels[i].SetActive(true);
-            }
-            else
-            {
-                classModels[i].SetActive(false);
-            }
-        }
-        CloseClassMenu();
-    }
 }

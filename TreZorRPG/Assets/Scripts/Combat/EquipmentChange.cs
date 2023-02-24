@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using RPG.Combat;
+using RPG.Player;
 
 
 public enum EquipptedItem : byte
@@ -31,6 +32,10 @@ public class EquipmentChange : NetworkBehaviour
 
     [SyncVar(hook = nameof(OnChangeEquipment))]
     public EquipptedItem equippedItem;
+    public ChoseClass choseClass;
+    private void Start(){
+        choseClass = GetComponent<ChoseClass>();
+    }
 
     void OnChangeEquipment (EquipptedItem oldEquippeditem, EquipptedItem newEquippeditem)
     {
@@ -39,14 +44,14 @@ public class EquipmentChange : NetworkBehaviour
 
     IEnumerator ChangeEquipment(EquipptedItem newEquippeditem)
     {
-        while (Lefthandtransform.transform.childCount > 0)
+        while (Lefthandtransform.transform.childCount > 0) // if there is a child in the left hand
         {
-            Destroy(Lefthandtransform.transform.GetChild(0).gameObject);
+            Destroy(Lefthandtransform.transform.GetChild(0).gameObject); // destroy it
             yield return null;
         }
-        while (Righthandtransform.transform.childCount > 0)
+        while (Righthandtransform.transform.childCount > 0) // if there is a child in the right hand
         {
-            Destroy(Righthandtransform.transform.GetChild(0).gameObject);
+            Destroy(Righthandtransform.transform.GetChild(0).gameObject); // destroy it
             yield return null;
         }
         switch (newEquippeditem)
@@ -66,13 +71,31 @@ public class EquipmentChange : NetworkBehaviour
     private void Update()
     {
         if (!isLocalPlayer) return;
-
-        if (Input.GetKeyDown(KeyCode.W) && equippedItem != EquipptedItem.Unarmed)
-            CmDChangeEquippedItem(EquipptedItem.Unarmed);
-        if (Input.GetKeyDown(KeyCode.X) && equippedItem != EquipptedItem.twohandedWep)
-            CmDChangeEquippedItem(EquipptedItem.twohandedWep);
-        if (Input.GetKeyDown(KeyCode.C) && equippedItem != EquipptedItem.bow)
-            CmDChangeEquippedItem(EquipptedItem.bow);
+        // If the player presses X.
+        if(Input.GetKeyDown(KeyCode.X))
+           {
+               if(equippedItem != EquipptedItem.Unarmed) // if the player is armed
+               {
+                   EquipHand(); // We give him his hands
+               }
+               else // If the player is unarmed, we give him a weapon according to his class
+               {
+                    int id = choseClass.GetIdActualClass(); 
+                    switch(id)
+                    {
+                        case 0:
+                            CmDChangeEquippedItem(EquipptedItem.twohandedWep);
+                            Debug.Log(id);
+                            break;
+                        case 1:
+                            CmDChangeEquippedItem(EquipptedItem.bow);
+                            break;
+                        default:
+                            EquipHand();
+                            break;
+                    }
+               }
+           }
 
        if (equippedItem == EquipptedItem.bow)
         {
@@ -84,13 +107,18 @@ public class EquipmentChange : NetworkBehaviour
 
 
     }
+    public void EquipHand() // When we change class, we equip hands
+    {
+        CmDChangeEquippedItem(EquipptedItem.Unarmed);
+    }
 
     [Command]
-    void CmDChangeEquippedItem(EquipptedItem selectedItem)
+    void CmDChangeEquippedItem(EquipptedItem selectedItem) // We change the item equipped by the player
     {
         equippedItem = selectedItem;
     }
-    public void EquipWeapon(Weapon weapon)
+
+    public void EquipWeapon(Weapon weapon) // We equip the weapon
     {
         currentWeapon = weapon;
         Animator animator = GetComponent<Animator>();
